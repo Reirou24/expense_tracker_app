@@ -2,6 +2,7 @@ import 'package:expense_tracker/components/expense_summary.dart';
 import 'package:expense_tracker/components/expense_tile.dart';
 import 'package:expense_tracker/data/expense_data.dart';
 import 'package:expense_tracker/models/expense_item.dart';
+import 'package:expense_tracker/utilities/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -116,7 +117,8 @@ class _HomePageState extends State<HomePage> {
 
   //cancel button
   void cancel() {
-
+    Navigator.pop(context);
+    clear();
   }
 
   //clear all data
@@ -142,7 +144,7 @@ class _HomePageState extends State<HomePage> {
           ExpenseSummary(
             startofWeek: value.startofWeekDate()),
 
-          SizedBox(height: 20),
+          SizedBox(height: Dimensions.height20),
 
           //expense list
           ListView.builder(

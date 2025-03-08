@@ -1,4 +1,5 @@
 import 'package:expense_tracker/bar%20graph/bar_data.dart';
+import 'package:expense_tracker/utilities/dimensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -54,8 +55,8 @@ class MyBarGraph extends StatelessWidget {
               BarChartRodData(
                 toY: data.y,
                 color: Colors.grey[800],
-                width: 25,
-                borderRadius: BorderRadius.circular(4),
+                width: Dimensions.width25,
+                borderRadius: BorderRadius.circular(Dimensions.radius4),
                 backDrawRodData: BackgroundBarChartRodData(
                   show: true,
                   toY: 100,
@@ -70,10 +71,10 @@ class MyBarGraph extends StatelessWidget {
 }
 
 Widget getBottomTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
+    var style = TextStyle(
       color: Colors.grey,
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: Dimensions.font16,
     );
   
   Widget text;
