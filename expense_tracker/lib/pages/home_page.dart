@@ -1,3 +1,4 @@
+import 'package:expense_tracker/components/expense_summary.dart';
 import 'package:expense_tracker/components/expense_tile.dart';
 import 'package:expense_tracker/data/expense_data.dart';
 import 'package:expense_tracker/models/expense_item.dart';
@@ -15,7 +16,8 @@ class _HomePageState extends State<HomePage> {
 
   //text controllers
   final newExpenseNameController = TextEditingController();
-  final newExpenseAmountController = TextEditingController();
+  final newExpensePesoController = TextEditingController();
+  final newExpenseCentsController = TextEditingController();
 
   //add new expense
   void addNewExpense() {
@@ -35,12 +37,28 @@ class _HomePageState extends State<HomePage> {
           ),
 
           //expense amount
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Expense Amount',
+          Row(children: [
+            Expanded(
+              child: 
+              TextField(
+                controller: newExpensePesoController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: '₱',
+                )
+              ),
             ),
-            controller: newExpenseAmountController
-          ),
+
+            Expanded(
+              child: TextField(
+                controller: newExpenseCentsController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: '¢',
+                )
+              ),
+            ),
+          ],)
         ],),
         actions: [
           //save button
@@ -61,9 +79,11 @@ class _HomePageState extends State<HomePage> {
 
   //save button
   void save() {
+    String amount = "${newExpensePesoController.text}.${newExpenseCentsController.text}";
+
     ExpenseItem newExpense = ExpenseItem(
       name: newExpenseNameController.text,
-      amount: newExpenseAmountController.text,
+      amount: amount,
       dateTime: DateTime.now(),
     );
 
@@ -81,7 +101,8 @@ class _HomePageState extends State<HomePage> {
 
   //clear all data
   void clear() {
-    newExpenseAmountController.clear();
+    newExpensePesoController.clear();
+    newExpenseCentsController.clear();
     newExpenseNameController.clear();
   }
 
@@ -93,16 +114,28 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.grey[300],
         floatingActionButton: FloatingActionButton(
           onPressed: addNewExpense,
+          backgroundColor: Colors.black,
           child: Icon(Icons.add),
           ),
-        body: ListView.builder(
-          itemCount: value.getAllExpenseList().length,
-          itemBuilder: (context, index) => ExpenseTile(
-            name: value.getAllExpenseList()[index].name,
-            dateTime: value.getAllExpenseList()[index].dateTime,
-            amount: value.getAllExpenseList()[index].amount,
-          ),
-        )
+        body: ListView(children: [
+          //weekly
+          ExpenseSummary(
+            startofWeek: value.startofWeekDate()),
+
+          SizedBox(height: 20),
+
+          //expense list
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: value.getAllExpenseList().length,
+            itemBuilder: (context, index) => ExpenseTile(
+              name: value.getAllExpenseList()[index].name,
+              dateTime: value.getAllExpenseList()[index].dateTime,
+              amount: value.getAllExpenseList()[index].amount,
+            ),
+          )
+        ],)
       ),
     );
   }
