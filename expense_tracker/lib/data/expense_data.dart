@@ -1,7 +1,8 @@
 import 'package:expense_tracker/datetime/date_time_helper.dart';
 import 'package:expense_tracker/models/expense_item.dart';
+import 'package:flutter/material.dart';
 
-class ExpenseData {
+class ExpenseData extends ChangeNotifier{
 
   //list of expenses
   List<ExpenseItem> overallExpenseList = [];
@@ -14,11 +15,14 @@ class ExpenseData {
   //add new expense
   void addNewExpense(ExpenseItem newExpense) {
     overallExpenseList.add(newExpense);
+    //make any changes such as saving and deleting, we notify listeners
+    notifyListeners();
   }
 
   //delete expense
   void deleteExpense(ExpenseItem expense) {
     overallExpenseList.remove(expense);
+    notifyListeners();
   }
 
   //get weekday from dateTime object
