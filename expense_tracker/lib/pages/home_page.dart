@@ -19,6 +19,13 @@ class _HomePageState extends State<HomePage> {
   final newExpensePesoController = TextEditingController();
   final newExpenseCentsController = TextEditingController();
 
+  //prepare data on startup
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ExpenseData>(context, listen: false).prepareData();
+  } 
+
   //add new expense
   void addNewExpense() {
     showDialog(
@@ -77,18 +84,31 @@ class _HomePageState extends State<HomePage> {
       ));
   }
 
+  //delete expense
+  void deleteExpense(ExpenseItem expense) {
+    Provider.of<ExpenseData>(context, listen: false).deleteExpense(expense);
+  }
+
   //save button
   void save() {
-    String amount = "${newExpensePesoController.text}.${newExpenseCentsController.text}";
 
-    ExpenseItem newExpense = ExpenseItem(
-      name: newExpenseNameController.text,
-      amount: amount,
-      dateTime: DateTime.now(),
-    );
+    if (
+      newExpenseNameController.text.isNotEmpty && 
+      newExpensePesoController.text.isNotEmpty && 
+      newExpenseCentsController.text.isNotEmpty) {
+      
+      String amount = "${newExpensePesoController.text}.${newExpenseCentsController.text}";
 
-    Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
+      ExpenseItem newExpense = ExpenseItem(
+        name: newExpenseNameController.text,
+        amount: amount,
+        dateTime: DateTime.now(),
+      );
 
+      Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
+
+    }
+    
     //removes dialog
     Navigator.pop(context);
     clear();
@@ -133,6 +153,8 @@ class _HomePageState extends State<HomePage> {
               name: value.getAllExpenseList()[index].name,
               dateTime: value.getAllExpenseList()[index].dateTime,
               amount: value.getAllExpenseList()[index].amount,
+              deleteTapped: (p0) =>
+              deleteExpense(value.getAllExpenseList()[index]),
             ),
           )
         ],)
